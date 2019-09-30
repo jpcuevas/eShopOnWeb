@@ -43,10 +43,24 @@ namespace Microsoft.eShopWeb.Web
         public void ConfigureDevelopmentServices(IServiceCollection services)
         {
             // use in-memory database
-            ConfigureInMemoryDatabases(services);
+            //ConfigureInMemoryDatabases(services);
 
             // use real database
+            ConfigureDevelopmentService(services);
             //ConfigureProductionServices(services);
+        }
+
+        public void ConfigureDevelopmentService(IServiceCollection services)
+        {
+            
+            services.AddEntityFrameworkSqlServer()
+            .AddDbContext<CatalogContext>(options =>
+             options.UseSqlServer(Configuration.GetConnectionString("CatalogConnection")));
+
+            services.AddDbContext<AppIdentityDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
+
+            ConfigureServices(services);
         }
 
         private void ConfigureInMemoryDatabases(IServiceCollection services)
